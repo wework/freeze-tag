@@ -1,6 +1,8 @@
 # FreezeTag
 
-Approaching tagging in more "stateless" way. The defacto tagging library for almost every Ruby on Rails project is the excellent [Acts As Taggable On Gem](https://github.com/mbleigh/acts-as-taggable-on) which provides a simple interface for polymorphic tagging of your models. However, this method has some drawbacks, namely an object is either tagged as something or not. This library will preserve tags in perpetuity, allowing you to observe what object were previously tagged with and replaying the events to derive any current tags.
+The defacto tagging library for almost every Ruby on Rails project is the excellent [Acts As Taggable On Gem](https://github.com/mbleigh/acts-as-taggable-on) which provides a simple interface for polymorphic tagging of your models. 
+
+However, this method has some drawbacks, namely an object is either tagged as something or not. This library will preserve tags in perpetuity, allowing you to observe what object were previously tagged as and review the tagging events to derive any current tags.
 
 ## Installation
 
@@ -14,19 +16,81 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
+Create the tables:
 
-    $ gem install freeze_tag
+1. Run the installer: ```rails g freeze_tag:install```
+This will create a migration to create your "freeze_tags" table
+
+2. Confirm your implementation.
+Since Freeze tags creates a polymorphic association between tags and models, its necessary to confirm the type of primary keys the models in your application use. Open the migration and choose the correct option for you. 
+
+3. Run the migration
 
 ## Usage
 
-TODO: Write usage instructions here
+#### Configuration:
+If you want 
 
-## Development
+#### Add this:
+```ruby
+include FreezeTag::Taggable
+```
+to the top of any model you'd like to start tagging.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+#### Tagging a record:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+A single tag:
+
+```ruby
+my_model_instance.freeze_tag(as: "Fancy")
+```
+
+Or apply multiple tags:
+
+```ruby
+my_model_instance.freeze_tag(as: ["Fancy", "Schmancy"])
+```
+
+Or apply multiple tags and expire all ones not in your list:
+
+```ruby
+my_model_instance.freeze_tag(as: ["Fancy", "Schmancy"], expire_others: true)
+```
+
+#### Accessing tags:
+
+A list of all the current tags
+
+```ruby
+my_model_instance.freeze_tag_list
+```
+
+Active Record association of all tags
+```ruby
+my_model_instance.freeze_tags
+```
+
+Active Record association of all "active" tags
+```ruby
+my_model_instance.active_freeze_tags
+```
+
+#### Retrieving records that have been tagged:
+
+Currently tagged with (only unexpired)
+```ruby
+MyModel.freeze_tagged(as: "Fancy")
+```
+
+Previously tagged with (only expired)
+```ruby
+MyModel.previously_freeze_tagged(as: "Fancy")
+```
+
+Ever tagged with (expired and unexpired)
+```ruby
+MyModel.ever_freeze_tagged(as: "Fancy")
+```
 
 ## Contributing
 
