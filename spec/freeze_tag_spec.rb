@@ -23,8 +23,17 @@ RSpec.describe FreezeTag do
   end
 
   it "doesn't allow multiple tags with the same value" do
-    article.freeze_tag(as: "Cool")
-    expect{ article.freeze_tag(as: "Cool") }.to raise_error(ActiveRecord::RecordNotUnique)
+    article.freeze_tag(as: "Same")
+    expect{ article.freeze_tag(as: "Same") }.to change{FreezeTag::Tag.count}.by(0)
+  end
+
+  it "expires all the other tags" do
+    article.freeze_tag(as: "Old")
+    article.freeze_tag(as: "Old2")
+    article.freeze_tag(as: ["Old3", "Old4"])
+    article.freeze_tag(as: ["New", "Old"], expire_others: true)
+    article.reload
+    expect(article.active_freeze_tags.count).to eq(2)
   end
 
   it "converts all tags to lowercase if the option is configured" do
