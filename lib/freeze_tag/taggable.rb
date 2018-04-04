@@ -9,11 +9,16 @@ module FreezeTag
       has_many :freeze_tags, as: :taggable, class_name: "FreezeTag::Tag"
       has_many :active_freeze_tags, -> { where("ended_at IS NULL OR ended_at > ?", DateTime.now) }, as: :taggable, class_name: "FreezeTag::Tag"
 
-      def freeze_tag(as: [])
+      def freeze_tag(as: [], expire_others: false)
         as = as.is_a?(String) ? [as] : as
         as = as.map(&:downcase) if self.class.try(:freeze_tag_case_sensitive)
+        
+        if expire_others == true
+          active_freeze_tags.where.not(tag: as).update_all(ended_at: DateTime.now)
+        end
+
         as.each do |t|
-          FreezeTag::Tag.create(taggable_type: self.class.name, taggable_id: self.id, tag: t)
+          FreezeTag::Tag.find_or_create_by(taggable_type: self.class.name, taggable_id: self.id, tag: t)
         end
       end
 
