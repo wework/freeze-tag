@@ -2,7 +2,9 @@
 
 The defacto tagging library for almost every Ruby on Rails project is the excellent [Acts As Taggable On Gem](https://github.com/mbleigh/acts-as-taggable-on) which provides a simple interface for polymorphic tagging of your models. 
 
-However, this method has some drawbacks, namely an object is either tagged as something or not. This library will preserve tags in perpetuity, allowing you to observe what object were previously tagged as and review the tagging events to derive any current tags.
+This library has some drawbacks, though, namely an object is either tagged as something or not. 
+
+This library will preserve tags in perpetuity, allowing you to observe what objects were previously tagged as and review the tagging events to derive any current tags.
 
 ## Installation
 
@@ -25,11 +27,6 @@ This will create a migration to create your "freeze_tags" table
 Since Freeze tags creates a polymorphic association between tags and models, its necessary to confirm the type of primary keys the models in your application use. Open the migration and choose the correct option for you. 
 
 3. Run the migration
-
-## Usage
-
-#### Configuration:
-If you want 
 
 #### Add this:
 ```ruby
