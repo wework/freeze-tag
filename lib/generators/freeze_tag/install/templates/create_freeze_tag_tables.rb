@@ -14,6 +14,8 @@ class CreateFreezeTagTables < ActiveRecord::Migration
     add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :ended_at]
     add_index :freeze_tags, [:taggable_type, :taggable_id, :ended_at]
     add_index :freeze_tags, [:tag, :ended_at]
+    
+    add_index :freeze_tags, [:taggable_type, :taggable_id, :tag], unique: true
 
   end
 end 
