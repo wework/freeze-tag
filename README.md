@@ -31,7 +31,9 @@ Create the tables:
 
 1. Run the installer:
 
-    $ rails g freeze_tag:install
+```
+$ rails g freeze_tag:install
+```
 
 This will create a migration to create your "freeze_tags" table
 
@@ -41,7 +43,9 @@ Since Freeze tags creates a polymorphic association between tags and models, its
 
 3. Run the migration
 
-    $ rake db:migrate
+```
+rake db:migrate
+```
 
 4. Add:
 ```ruby
