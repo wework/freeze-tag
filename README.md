@@ -29,7 +29,10 @@ And then execute:
 
 Create the tables:
 
-1. Run the installer: ```rails g freeze_tag:install```
+1. Run the installer:
+
+
+    $ rails g freeze_tag:install
 
 This will create a migration to create your "freeze_tags" table
 
