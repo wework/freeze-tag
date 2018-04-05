@@ -28,14 +28,13 @@ Since Freeze tags creates a polymorphic association between tags and models, its
 
 3. Run the migration
 
-4. Add to models
+4. Add:
 ```ruby
 include FreezeTag::Taggable
 ```
 to the top of any model you'd like to start tagging.
 
-5. Case sensitivity
-If you like add
+5. Case sensitivity, add:
 ```ruby
 def self.freeze_tag_case_sensitive
   true
@@ -57,21 +56,46 @@ Or apply multiple tags:
 my_model_instance.freeze_tag(as: ["Fancy", "Schmancy"])
 ```
 
-Or apply multiple tags and expire all ones not in your list:
+Or apply multiple tags and expire all other ones:
 
 ```ruby
 my_model_instance.freeze_tag(as: ["Fancy", "Schmancy"], expire_others: true)
 ```
 
+##### Tagging a record, with list:
+There may be times you want multiple lists of tags, i.e. users with skills, AND hobbies
+
+All the same methods above work, simple pass a list as an argument.
+
+```ruby
+my_model_instance.freeze_tag(as: "Web Design", list: "Skills")
+```
+
 #### Accessing tags:
 
-A list of all the current tags
+All the current "active" tags as a simple array of strings.
 
 ```ruby
 my_model_instance.freeze_tag_list
+["Happy", "Go", "Lucky"]
+```
+
+All the tags as a simple array of strings.
+
+```ruby
+my_model_instance.freeze_tag_list(only_active: false)
+["Happy", "Go", "Lucky", "Sad"]
+```
+
+All the tags, in a list, as a simple array of strings.
+
+```ruby
+my_model_instance.freeze_tag_list(list: "Skills")
+["Web Design", "Illustration"]
 ```
 
 Active Record association of all tags
+
 ```ruby
 my_model_instance.freeze_tags
 ```
@@ -79,6 +103,12 @@ my_model_instance.freeze_tags
 Active Record association of all "active" tags
 ```ruby
 my_model_instance.active_freeze_tags
+```
+
+You can change queries to the above to filter by anything.
+```ruby
+my_model_instance.freeze_tags.where(list: "Skills")
+my_model_instance.active_freeze_tags.where(list: "Skills")
 ```
 
 #### Retrieving records that have been tagged:
@@ -96,6 +126,11 @@ MyModel.previously_freeze_tagged(as: "Fancy")
 Ever tagged with (expired and unexpired)
 ```ruby
 MyModel.ever_freeze_tagged(as: "Fancy")
+```
+
+All the above methods work with a "list" argument as well
+```ruby
+MyModel.ever_freeze_tagged(as: "Fancy", list: "Skills")
 ```
 
 ## Contributing
