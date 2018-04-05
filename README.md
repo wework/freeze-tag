@@ -28,11 +28,20 @@ Since Freeze tags creates a polymorphic association between tags and models, its
 
 3. Run the migration
 
-#### Add this:
+4. Add to models
 ```ruby
 include FreezeTag::Taggable
 ```
 to the top of any model you'd like to start tagging.
+
+5. Case sensitivity
+If you like add
+```ruby
+def self.freeze_tag_case_sensitive
+  true
+end
+```
+To your model and all tags will be saved as lowercase
 
 #### Tagging a record:
 
