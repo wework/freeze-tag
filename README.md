@@ -1,10 +1,19 @@
 # FreezeTag
 
-The defacto tagging library for almost every Ruby on Rails project is the excellent [Acts As Taggable On Gem](https://github.com/mbleigh/acts-as-taggable-on) which provides a simple interface for polymorphic tagging of your models. 
+Howdy,
 
-This library has some drawbacks, though, namely an object is either tagged as something or not. 
+The de facto tagging library for almost every Ruby on Rails project has been [Acts As Taggable On Gem](https://github.com/mbleigh/acts-as-taggable-on) which provides a simple interface for polymorphic tagging of your models. 
 
-This library will preserve tags in perpetuity, allowing you to observe what objects were previously tagged as and review the tagging events to derive any current tags.
+As excellent and useful as ActsAsTaggable is, this library is attempt to reconcile some shortcomings:
+
+1. Freeze tag allows for a more "stateless" approach to tagging. 
+
+Tags are never deleted, instead they have an "ended_at" column, which can be updated to make them active or inactive.
+
+2. The associations are more simple.
+
+Tags are held in a single table which holds the content of the tag (its name) and the association back to the model instance its attached to.
+This has some advantages including simpler querying, joining, etc., but obviously drawbacks as well.
 
 ## Installation
 
@@ -21,12 +30,17 @@ And then execute:
 Create the tables:
 
 1. Run the installer: ```rails g freeze_tag:install```
+
 This will create a migration to create your "freeze_tags" table
 
 2. Confirm your implementation.
+
 Since Freeze tags creates a polymorphic association between tags and models, its necessary to confirm the type of primary keys the models in your application use. Open the migration and choose the correct option for you. 
 
 3. Run the migration
+
+
+    $ rake db:migrate
 
 4. Add:
 ```ruby
@@ -132,6 +146,14 @@ All the above methods work with a "list" argument as well
 ```ruby
 MyModel.ever_freeze_tagged(as: "Fancy", list: "Skills")
 ```
+
+#### Accessing the model directly.
+
+```ruby
+FreezeTag::Tag
+```
+
+Will give you direct access to the freeze tags table in a very standard way. 
 
 ## Contributing
 

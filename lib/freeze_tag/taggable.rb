@@ -10,15 +10,19 @@ module FreezeTag
       has_many :active_freeze_tags, -> { where("ended_at IS NULL OR ended_at > ?", DateTime.now) }, as: :taggable, class_name: "FreezeTag::Tag"
 
       def freeze_tag(as: [], expire_others: false, list: nil)
-        as = as.is_a?(String) ? [as] : as
-        as = as.map(&:downcase) if self.class.try(:freeze_tag_case_sensitive)
-        
-        if expire_others == true
-          active_freeze_tags.where(list: list).where.not(tag: as).update_all(ended_at: DateTime.now)
-        end
+        ActiveRecord::Base.transaction do
+          as = as.is_a?(String) ? [as] : as
+          as = as.map(&:downcase) if self.class.try(:freeze_tag_case_sensitive)
+          
+          if expire_others == true
+            active_freeze_tags.where(list: list).where.not(tag: as).update_all(ended_at: DateTime.now)
+          end
 
-        as.each do |t|
-          FreezeTag::Tag.find_or_create_by(taggable_type: self.class.name, taggable_id: self.id, tag: t, list: list)
+          as.each do |t|
+            ft = FreezeTag::Tag.find_or_create_by(taggable_type: self.class.name, taggable_id: self.id, tag: t, list: list)
+            ft.ended_at = nil
+            ft.save! if ft.changed?
+          end
         end
       end
 
