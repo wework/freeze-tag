@@ -9,13 +9,13 @@ class CreateFreezeTagTables < ActiveRecord::Migration
       t.string  :list,           index: true
       # t.uuid    :taggable_id,   index: true, null: false # Use this if you're mapping using UUIDs as a primary key
       # t.integer :taggable_id,   index: true, null: false # Use this if you're mapping using Integer Primary Keys
-      t.datetime  :ended_at,     index: true
+      t.datetime  :expired_at,   index: true
       t.timestamps
     end
 
-    add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :ended_at]
-    add_index :freeze_tags, [:taggable_type, :taggable_id, :ended_at]
-    add_index :freeze_tags, [:tag, :ended_at]    
-    add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :list], unique: true, name: "unique"
+    add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :expired_at, :list]
+    add_index :freeze_tags, [:taggable_type, :taggable_id, :expired_at, :list]
+    add_index :freeze_tags, [:tag, :expired_at, :list]
+    add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :list, :expired_at], unique: true, name: "fz_unique_tt_tid_t_li_ex_at"
   end
 end 

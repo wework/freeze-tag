@@ -83,7 +83,7 @@ RSpec.describe FreezeTag do
   it "allows for a tag to be expired" do
     article.freeze_tag(as: "Cool")
     article.expire_freeze_tag(tag: "Cool")
-    expect(article.freeze_tags.first.ended_at).to be_truthy
+    expect(article.freeze_tags.first.expired_at).to be_truthy
   end
 
   it "allows for a tag to be expired by list" do

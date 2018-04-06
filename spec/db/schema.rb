@@ -6,11 +6,11 @@ ActiveRecord::Schema.define do
     t.string   :tag,           index: true, null: false
     t.string   :list,          index: true
     t.integer  :taggable_id,   index: true, null: false
-    t.datetime :ended_at,      index: true
+    t.datetime :expired_at,      index: true
     t.timestamps
   end
 
-  add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :list], unique: true, name: "fz_unique_tt_tid_t_li"
+  add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :list, :expired_at], unique: true, name: "fz_unique_tt_tid_t_li"
 
   create_table :articles do |t|
     t.string :title

@@ -8,7 +8,7 @@ As excellent and useful as ActsAsTaggable is, this library is attempt to reconci
 
 1. Freeze tag allows for a more "stateless" approach to tagging. 
 
-Tags are never deleted, instead they have an "ended_at" column, which can be updated to make them active or inactive.
+Tags are never deleted, instead they have an "expired_at" column, which can be updated to make them active or inactive.
 
 2. The associations are more simple.
 
@@ -35,7 +35,7 @@ Create the tables:
 $ rails g freeze_tag:install
 ```
 
-This will create a migration to create your "freeze_tags" table
+This adds a migration to create your "freeze_tags" table
 
 2. Confirm your implementation.
 
