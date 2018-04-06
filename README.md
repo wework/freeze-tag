@@ -8,7 +8,7 @@ As excellent and useful as ActsAsTaggable is, this library is attempt to reconci
 
 1. Freeze tag allows for a more "stateless" approach to tagging. 
 
-Tags are never deleted, instead they have an "expired_at" column, which can be updated to make them active or inactive.
+Tags are never deleted, instead they have an "expired_at" column, which can be updated to make them inactive.
 
 2. The associations are more simple.
 
