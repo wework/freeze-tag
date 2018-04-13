@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["paul@wework.com"]
 
   spec.summary       = %q{A stateless tagging library}
-  spec.homepage      = "https://wework.com"
+  spec.homepage      = "https://github.com/wework/freeze-tag"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
