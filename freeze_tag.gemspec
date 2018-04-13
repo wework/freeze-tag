@@ -32,4 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "database_cleaner", "~> 1.5"
   spec.add_development_dependency 'appraisal'
   spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'awesome_print'
 end
