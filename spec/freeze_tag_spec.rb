@@ -123,6 +123,16 @@ RSpec.describe FreezeTag do
     expect(article.freeze_tag_list(list: "Ideas").count).to eq(2)
   end
 
+  it "allows you to tag with model attributes " do
+    article = Article.new(title: "Article 5", freeze_tagged: [{
+      as: ["Cool", "Beans"],
+      list: "Ideas"
+    }])
+    
+    article.save
+    expect(article.freeze_tag_list(list: "Ideas").count).to eq(2)
+  end
+
   it "doesn't save the tags if something goes wrong" do
     article = Article.new
     article.freeze_tagged = [{

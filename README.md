@@ -90,6 +90,19 @@ All the same methods above work, simple pass a list as an argument.
 my_model_instance.freeze_tag(as: "Web Design", list: "Skills")
 ```
 
+##### Tagging while creating:
+You can also use the same style/attributes to tag while creating instances
+
+```ruby
+my_model_instance = MyModel.new(name: "MyModelName", freeze_tagged: [{
+  as: ["Cool", "Beans"],
+  list: "Ideas",
+  expire_others: true
+}])
+
+my_model_instance.save
+```
+
 #### Accessing tags:
 
 All the current "active" tags as a simple array of strings.
