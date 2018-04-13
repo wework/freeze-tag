@@ -30,7 +30,7 @@ module FreezeTag
           end
 
           unless as.present?
-            self.errors.add(:freeze_tags, "Missing Tags")
+            self.errors.add(:freeze_tags, "Freeze tag error")
             return
           end
 

@@ -140,7 +140,7 @@ RSpec.describe FreezeTag do
       list: "Ideas"
     }]
 
-    expect{article.save}.to change{Article.count}.by(0)
+    expect{article.save!}.to raise_error(ActiveRecord::RecordInvalid, /Freeze tag error/)
   end
 
 
