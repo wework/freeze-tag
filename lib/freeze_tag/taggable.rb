@@ -9,7 +9,18 @@ module FreezeTag
       has_many :freeze_tags, as: :taggable, class_name: "FreezeTag::Tag"
       has_many :active_freeze_tags, -> { where("expired_at IS NULL OR expired_at > ?", DateTime.now) }, as: :taggable, class_name: "FreezeTag::Tag"
 
-      def freeze_tag(as: [], expire_others: false, list: nil)
+      attr_accessor :freeze_tagged
+      after_commit -> { create_freeze_tags_from_attr_accessor(validate: false) }
+      before_validation -> { create_freeze_tags_from_attr_accessor(validate: true) } 
+
+      def create_freeze_tags_from_attr_accessor(validate: false)
+        return unless self.freeze_tagged.present?
+        self.freeze_tagged.to_a.each do |ft|
+          self.freeze_tag(as: ft[:as], expire_others: ft[:expire_others].present?, list: ft[:list], validate: validate)
+        end
+      end
+
+      def freeze_tag(as: [], expire_others: false, list: nil, validate: false)
         ActiveRecord::Base.transaction do
           as = as.is_a?(String) ? [as] : as
           as = as.map(&:downcase) if self.class.try(:freeze_tag_case_sensitive)
@@ -18,8 +29,20 @@ module FreezeTag
             active_freeze_tags.where(list: list).where.not(tag: as).update_all(expired_at: DateTime.now)
           end
 
+          unless as.present?
+            self.errors.add(:freeze_tags, "Missing Tags")
+            return
+          end
+
           as.each do |t|
-            ft = FreezeTag::Tag.find_or_create_by(taggable_type: self.class.name, taggable_id: self.id, tag: t, list: list, expired_at: nil)
+            if validate == false
+              ft = FreezeTag::Tag.find_or_create_by(taggable_type: self.class.name, taggable_id: self.id, tag: t, list: list, expired_at: nil)
+            else
+              ft = FreezeTag::Tag.find_or_initialize_by(taggable_type: self.class.name, taggable_id: self.id, tag: t, list: list, expired_at: nil)
+              unless ft.valid?
+                self.errors.add(:freeze_tags, "Freeze tag error #{ft.errors}")
+              end
+            end
           end
         end
       end

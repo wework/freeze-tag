@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe FreezeTag do
-  let!(:article) { Article.create }
-  let!(:article1) { Article.create }
-  let!(:article2) { Article.create }
+  let!(:article) { Article.create(title: "Article") }
+  let!(:article1) { Article.create(title: "Article 1") }
+  let!(:article2) { Article.create(title: "Article 2") }
 
   it "has a version number" do
     expect(FreezeTag::VERSION).not_to be nil
@@ -102,5 +102,46 @@ RSpec.describe FreezeTag do
     article2.freeze_tag(as: "UnCool")
     expect(Article.freeze_tagged(as: "Cool").count).to eq(2)
   end
+
+  it "allows you to tag with model attributes" do
+    article = Article.new(title: "Article 4")
+    article.freeze_tagged = [{
+      as: "Cool",
+      list: "Ideas"
+    }]
+    article.save
+    expect(Article.freeze_tagged(as: "Cool").count).to eq(1)
+  end 
+
+  it "allows you to tag with model attributes (array)" do
+    article = Article.new(title: "Article 5")
+    article.freeze_tagged = [{
+      as: ["Cool", "Beans"],
+      list: "Ideas"
+    }]
+    article.save
+    expect(article.freeze_tag_list(list: "Ideas").count).to eq(2)
+  end
+
+  it "doesn't save the tags if something goes wrong" do
+    article = Article.new
+    article.freeze_tagged = [{
+      as: "Cool",
+      list: "Ideas"
+    }]
+    article.save rescue false
+    expect(Article.freeze_tagged(as: "Cool").count).to eq(0)
+  end
+
+  it "doesn't save the object if the tags are bad" do
+    article = Article.new(title: "Article 6")
+    article.freeze_tagged = [{
+      ass: "Cool",
+      list: "Ideas"
+    }]
+
+    expect{article.save}.to change{Article.count}.by(0)
+  end
+
 
 end

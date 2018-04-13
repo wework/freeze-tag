@@ -13,7 +13,7 @@ ActiveRecord::Schema.define do
   add_index :freeze_tags, [:taggable_type, :taggable_id, :tag, :list, :expired_at], unique: true, name: "fz_unique_tt_tid_t_li"
 
   create_table :articles do |t|
-    t.string :title
+    t.string :title, null: false
     t.string :body
   end
 
