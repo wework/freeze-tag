@@ -57,7 +57,7 @@ module FreezeTag
 
       def expire_freeze_tag(tag: nil, date: nil, list: nil)
         tag = tag.downcase if self.try(:freeze_tag_case_sensitive)
-        to_exp = freeze_tags.find_by(tag: tag, list: list)
+        to_exp = freeze_tags.find_by(tag: tag, list: list, expired_at: nil)
         return nil unless to_exp.present?
         exp_at = date.present? ? date : DateTime.now
         to_exp.expired_at = exp_at
