@@ -162,4 +162,17 @@ RSpec.describe FreezeTag do
     expect(Article.ever_freeze_tagged(as: "Cool").count).to eq(3)
   end
 
+  it "returns only articles that have only expired freeze tags" do 
+    article.freeze_tag(as: "Cool")
+    article.expire_freeze_tag(tag: "Cool")
+    article.freeze_tag(as: "Cool")
+
+    article1.freeze_tag(as: "Cool")
+    article1.expire_freeze_tag(tag: "Cool")
+
+    article2.freeze_tag(as: "Cool")
+    
+    expect(Article.previously_freeze_tagged(as: "Cool").count).to eq(1)
+  end
+
 end
