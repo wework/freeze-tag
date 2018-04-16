@@ -153,5 +153,13 @@ RSpec.describe FreezeTag do
     expect{article.save!}.to raise_error(ActiveRecord::RecordInvalid, /Freeze tag error/)
   end
 
+  it "returns any article that have been tagged" do 
+    article.freeze_tag(as: "Cool")
+    article.expire_freeze_tag(tag: "Cool")
+    article.freeze_tag(as: "Cool")
+    article1.freeze_tag(as: "Cool")
+    article2.freeze_tag(as: "Cool")
+    expect(Article.ever_freeze_tagged(as: "Cool").count).to eq(3)
+  end
 
 end

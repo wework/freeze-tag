@@ -70,27 +70,27 @@ module FreezeTag
       def freeze_tagged(as: nil, list: nil)
         as = as.downcase if self.try(:freeze_tag_case_sensitive)
         if list.present?
-          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND (freeze_tags.expired_at IS NULL OR freeze_tags.expired_at > '#{DateTime.now}') AND freeze_tags.tag = '#{as}' AND freeze_tags.list = '#{list}'")
+          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND (freeze_tags.expired_at IS NULL OR freeze_tags.expired_at > '#{DateTime.now}') AND freeze_tags.tag = '#{as}' AND freeze_tags.list = '#{list}'").distinct
         else
-          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND (freeze_tags.expired_at IS NULL OR freeze_tags.expired_at > '#{DateTime.now}') AND freeze_tags.tag = '#{as}'")
+          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND (freeze_tags.expired_at IS NULL OR freeze_tags.expired_at > '#{DateTime.now}') AND freeze_tags.tag = '#{as}'").distinct
         end
       end
 
       def previously_freeze_tagged(as: nil, list: nil)
         as = as.downcase if self.try(:freeze_tag_case_sensitive)
         if list.present?
-          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.expired_at < '#{DateTime.now}' AND freeze_tags.tag = '#{as}' AND freeze_tags.list = '#{list}'")
+          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.expired_at < '#{DateTime.now}' AND freeze_tags.tag = '#{as}' AND freeze_tags.list = '#{list}'").distinct
         else
-          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.expired_at < '#{DateTime.now}' AND freeze_tags.tag = '#{as}'")
+          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.expired_at < '#{DateTime.now}' AND freeze_tags.tag = '#{as}'").distinct
         end
       end
 
       def ever_freeze_tagged(as: nil, list: nil)
         as = as.downcase if self.try(:freeze_tag_case_sensitive)
         if list.present?
-          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.tag = '#{as}' AND freeze_tags.list = '#{list}'")
+          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.tag = '#{as}' AND freeze_tags.list = '#{list}'").distinct
         else
-          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.tag = '#{as}'")
+          self.joins("INNER JOIN freeze_tags ON freeze_tags.taggable_id = #{self.table_name}.id AND freeze_tags.tag = '#{as}'").distinct
         end
       end
     end
